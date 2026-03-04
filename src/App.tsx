@@ -382,9 +382,9 @@ export default function App() {
             <p className="card-title">5cm沈む強さで 100〜120回/分</p>
             <p className="card-note">胸の真ん中を、強く・速く・絶え間なく圧迫</p>
             <div className="chip-row">
-              <span className="chip danger">DEPTH: 約5cm</span>
-              <span className="chip danger">TEMPO: 100-120</span>
-              <span className="chip danger">FULL RECOIL</span>
+              <span className="chip danger">深さ: 約5cm</span>
+              <span className="chip danger">テンポ: 100-120</span>
+              <span className="chip danger">しっかりリコイル！</span>
             </div>
           </div>
         </section>
