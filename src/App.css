@@ -89,6 +89,13 @@
   font-variant-numeric: tabular-nums;
 }
 
+.auto-note {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.84;
+  letter-spacing: 0.03em;
+}
+
 .timer-button {
   border: 0;
   background: transparent;
@@ -140,12 +147,12 @@
 }
 
 .gesture-surface {
-  touch-action: pan-y;
+  touch-action: manipulation;
   user-select: none;
 }
 
 .slide-shell {
-  width: min(1120px, 100%);
+  width: min(1200px, 100%);
   max-height: calc(100dvh - 190px);
   overflow-y: auto;
   overflow-x: hidden;
@@ -155,7 +162,7 @@
     transform 0.32s ease,
     filter 0.32s ease;
   opacity: 1;
-  transform: scale(1);
+  transform: translateX(0) scale(1);
 }
 
 .slide-shell::-webkit-scrollbar {
@@ -169,16 +176,22 @@
 
 .slide-shell.is-transitioning {
   opacity: 0;
-  transform: scale(0.985);
-  filter: blur(4px);
+  filter: blur(3px);
+}
+
+.slide-shell.is-transitioning.to-next {
+  transform: translateX(-56px) scale(0.985);
+}
+
+.slide-shell.is-transitioning.to-prev {
+  transform: translateX(56px) scale(0.985);
 }
 
 .sub-title {
   margin: 0 0 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.08em;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .slide-title {
@@ -262,7 +275,7 @@
 .card-note {
   margin: 0;
   opacity: 0.86;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.55;
 }
 
@@ -436,7 +449,7 @@
 .gesture-hint {
   margin: 14px 0 0;
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.04em;
   opacity: 0.65;
 }
@@ -506,6 +519,16 @@
   }
 }
 
+@media (min-width: 900px) and (orientation: landscape) {
+  .bls-main {
+    padding: 16px 24px;
+  }
+
+  .slide-shell {
+    max-height: calc(100dvh - 176px);
+  }
+}
+
 @media (max-width: 900px) {
   .bls-header {
     height: 84px;
@@ -521,6 +544,10 @@
   }
 
   .slide-index {
+    display: none;
+  }
+
+  .auto-note {
     display: none;
   }
 

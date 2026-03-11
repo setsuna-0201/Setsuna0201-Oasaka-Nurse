@@ -34,6 +34,7 @@ interface SwipeStart {
 const SWIPE_MIN_DISTANCE_PX = 56;
 const SWIPE_MAX_OFF_AXIS_PX = 72;
 const SWIPE_MAX_DURATION_MS = 650;
+const TOTAL_SLIDES = 8;
 
 function CircularTimer({
   duration,
@@ -160,12 +161,13 @@ export default function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionDirection, setTransitionDirection] = useState<"next" | "prev">("next");
   const [cprPulse, setCprPulse] = useState(0);
 
   const transitionLockRef = useRef(false);
   const transitionTimeoutRef = useRef<number | null>(null);
   const swipeStartRef = useRef<SwipeStart | null>(null);
-  const slideDuration = 12000;
+  const slideDuration = 10000;
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -174,29 +176,33 @@ export default function App() {
     return () => window.clearInterval(interval);
   }, []);
 
-  const startTransition = useCallback((updater: (prev: number, total: number) => number) => {
-    if (transitionLockRef.current) return;
-    transitionLockRef.current = true;
-    setIsTransitioning(true);
+  const startTransition = useCallback(
+    (direction: "next" | "prev", updater: (prev: number, total: number) => number) => {
+      if (transitionLockRef.current) return;
+      transitionLockRef.current = true;
+      setTransitionDirection(direction);
+      setIsTransitioning(true);
 
-    if (transitionTimeoutRef.current !== null) {
-      window.clearTimeout(transitionTimeoutRef.current);
-    }
+      if (transitionTimeoutRef.current !== null) {
+        window.clearTimeout(transitionTimeoutRef.current);
+      }
 
-    transitionTimeoutRef.current = window.setTimeout(() => {
-      setCurrentSlide((prev) => updater(prev, 8));
-      setIsTransitioning(false);
-      transitionLockRef.current = false;
-      transitionTimeoutRef.current = null;
-    }, 320);
-  }, []);
+      transitionTimeoutRef.current = window.setTimeout(() => {
+        setCurrentSlide((prev) => updater(prev, TOTAL_SLIDES));
+        setIsTransitioning(false);
+        transitionLockRef.current = false;
+        transitionTimeoutRef.current = null;
+      }, 320);
+    },
+    [],
+  );
 
   const handleNext = useCallback(() => {
-    startTransition((prev, total) => (prev + 1) % total);
+    startTransition("next", (prev, total) => (prev + 1) % total);
   }, [startTransition]);
 
   const handlePrev = useCallback(() => {
-    startTransition((prev, total) => (prev - 1 + total) % total);
+    startTransition("prev", (prev, total) => (prev - 1 + total) % total);
   }, [startTransition]);
 
   const parseSwipe = useCallback(
@@ -213,7 +219,6 @@ export default function App() {
       if (Math.abs(deltaX) < SWIPE_MIN_DISTANCE_PX) return;
       if (Math.abs(deltaY) > SWIPE_MAX_OFF_AXIS_PX) return;
 
-      setIsPlaying(false);
       if (deltaX < 0) {
         handleNext();
       } else {
@@ -249,11 +254,9 @@ export default function App() {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowLeft") {
-        setIsPlaying(false);
         handlePrev();
       }
       if (event.key === "ArrowRight") {
-        setIsPlaying(false);
         handleNext();
       }
     };
@@ -273,9 +276,9 @@ export default function App() {
   const slides: SlideData[] = [
     {
       id: 0,
-      step: "INTRO",
-      title: "救命の連鎖をつなぐのはあなた",
-      subTitle: "Basic Life Support Guide",
+      step: "START",
+      title: "だれかが たおれたら",
+      subTitle: "みんなで たすける 7ステップ",
       accentColor: "#f43f5e",
       bgGradient: "linear-gradient(135deg, #881337 0%, #111827 55%, #020617 100%)",
       content: (
@@ -284,16 +287,16 @@ export default function App() {
             <Heart size={92} />
           </div>
           <p className="lead">
-            目の前で人が倒れたとき、何ができますか？
+            あわてなくて大丈夫。
             <br />
-            勇気ある一歩を踏み出すための
-            <strong> 7つのステップ </strong>
-            を、現場を想定して短時間で学べます。
+            この7つを順番にすると、
+            <strong> 命を守る行動 </strong>
+            ができます。
           </p>
           <div className="chip-row">
-            <span className="chip">反応確認</span>
-            <span className="chip">119通報</span>
-            <span className="chip">胸骨圧迫</span>
+            <span className="chip">こえかけ</span>
+            <span className="chip">119</span>
+            <span className="chip">むねをおす</span>
             <span className="chip">AED</span>
           </div>
         </section>
@@ -301,90 +304,90 @@ export default function App() {
     },
     {
       id: 1,
-      step: "STEP 01",
-      title: "反応の確認",
-      subTitle: "Check Response",
+      step: "STEP 1",
+      title: "1. こえをかける",
+      subTitle: "よびかけ",
       accentColor: "#3b82f6",
       bgGradient: "linear-gradient(135deg, #1e3a8a 0%, #111827 60%, #020617 100%)",
       content: (
         <section className="slide-grid two-col">
           <div className="card">
             <User size={84} />
-            <p className="card-title">肩を叩きながら呼びかける</p>
-            <p className="card-note">「大丈夫ですか!?」と耳元で大きな声で確認</p>
+            <p className="card-title">かたをトントンして聞く</p>
+            <p className="card-note">「だいじょうぶ？」と大きな声で</p>
           </div>
           <div className="card muted">
             <Hand size={42} />
-            <p className="card-title">反応なしなら次へ</p>
-            <p className="card-note">迷った場合も心停止として、直ちに次の行動へ</p>
+            <p className="card-title">へんじがなければ次へ</p>
+            <p className="card-note">まよったら、すぐ助けを呼ぼう</p>
           </div>
         </section>
       ),
     },
     {
       id: 2,
-      step: "STEP 02",
-      title: "助けを呼ぶ",
-      subTitle: "Call for Help",
+      step: "STEP 2",
+      title: "2. おとなをよぶ",
+      subTitle: "119 と AED",
       accentColor: "#f59e0b",
       bgGradient: "linear-gradient(135deg, #78350f 0%, #111827 60%, #020617 100%)",
       content: (
         <section className="slide-grid two-col">
           <div className="card">
             <Phone size={42} />
-            <p className="card-title">119番通報</p>
-            <p className="card-note">場所・状況・患者状態を短く順に伝える</p>
+            <p className="card-title">119に電話する</p>
+            <p className="card-note">「どこで」「だれが」を落ち着いて話す</p>
           </div>
           <div className="card">
             <Zap size={42} />
-            <p className="card-title">AEDの手配</p>
-            <p className="card-note">指差しで「あなた、AEDをお願いします」</p>
+            <p className="card-title">AEDを持ってきてもらう</p>
+            <p className="card-note">「あなた、AEDお願いします」と頼む</p>
           </div>
           <p className="helper-note">
-            <ArrowRight size={14} /> 周囲の人には「救急車の誘導」「交代要員」も依頼
+            <ArrowRight size={14} /> ほかの人には「救急車の案内」もお願いする
           </p>
         </section>
       ),
     },
     {
       id: 3,
-      step: "STEP 03",
-      title: "呼吸の確認",
-      subTitle: "Check Breathing",
+      step: "STEP 3",
+      title: "3. いきをみる",
+      subTitle: "10びょうだけ",
       accentColor: "#14b8a6",
       bgGradient: "linear-gradient(135deg, #134e4a 0%, #111827 60%, #020617 100%)",
       content: (
         <section className="slide-grid two-col">
           <div className="card">
             <Activity size={44} className={cprPulse === 0 ? "pulse-soft" : "pulse-strong"} />
-            <p className="card-title">10秒以内で確認</p>
-            <p className="card-note">胸とお腹の動きを見て、正常呼吸か判断する</p>
+            <p className="card-title">10びょうで確認</p>
+            <p className="card-note">むねとおなかが動くか見る</p>
           </div>
           <div className="card warning">
             <AlertTriangle size={42} />
-            <p className="card-title">死戦期呼吸に注意</p>
-            <p className="card-note">しゃくり上げる呼吸は「呼吸なし」で対応する</p>
+            <p className="card-title">おかしないきは危ない</p>
+            <p className="card-note">しゃくりあげるような呼吸は「いきなし」</p>
           </div>
         </section>
       ),
     },
     {
       id: 4,
-      step: "STEP 04",
-      title: "胸骨圧迫",
-      subTitle: "CPR",
+      step: "STEP 4",
+      title: "4. むねをおす",
+      subTitle: "リズムよく",
       accentColor: "#ef4444",
       bgGradient: "linear-gradient(135deg, #7f1d1d 0%, #111827 60%, #020617 100%)",
       content: (
         <section className="slide-grid single">
           <div className="card wide">
             <Heart size={72} className={cprPulse === 0 ? "cpr-down" : "cpr-up"} />
-            <p className="card-title">5cm沈む強さで 100〜120回/分</p>
-            <p className="card-note">胸の真ん中を、強く・速く・絶え間なく圧迫</p>
+            <p className="card-title">まんなかを 強く・はやく</p>
+            <p className="card-note">1分で100〜120回。5cmくらいしずむ強さで</p>
             <div className="chip-row">
-              <span className="chip danger">深さ: 約5cm</span>
-              <span className="chip danger">テンポ: 100-120</span>
-              <span className="chip danger">しっかりリコイル！</span>
+              <span className="chip danger">ふかさ 5cm</span>
+              <span className="chip danger">1分 100-120回</span>
+              <span className="chip danger">おしたら もどす</span>
             </div>
           </div>
         </section>
@@ -392,9 +395,9 @@ export default function App() {
     },
     {
       id: 5,
-      step: "STEP 05",
-      title: "AEDパッドの位置",
-      subTitle: "Pad Placement",
+      step: "STEP 5",
+      title: "5. AEDシールをはる",
+      subTitle: "はる場所",
       accentColor: "#10b981",
       bgGradient: "linear-gradient(135deg, #064e3b 0%, #111827 60%, #020617 100%)",
       content: (
@@ -403,14 +406,14 @@ export default function App() {
             <TorsoWithPads />
           </div>
           <div className="card pad-info">
-            <p className="card-title">心臓を挟む位置に2枚</p>
+            <p className="card-title">シールは2まい</p>
             <ol className="plain-list ordered">
-              <li>右鎖骨の下（胸の右上）</li>
-              <li>左脇腹（胸の左下）</li>
+              <li>みぎむねの上</li>
+              <li>ひだりわきの下</li>
             </ol>
-            <p className="card-note">パッド同士は重ならない。機器の音声指示に従って操作する。</p>
+            <p className="card-note">かさならないようにして、音声ガイドどおりに進める</p>
             <p className="helper-note">
-              <ArrowRight size={14} /> 金属アクセサリを外し、濡れた肌は拭き取る
+              <ArrowRight size={14} /> ぬれていたらふく。ネックレスははずす
             </p>
           </div>
         </section>
@@ -418,20 +421,20 @@ export default function App() {
     },
     {
       id: 6,
-      step: "STEP 06",
-      title: "電気ショック",
-      subTitle: "Electric Shock",
+      step: "STEP 6",
+      title: "6. ボタン前に声かけ",
+      subTitle: "みんな はなれて",
       accentColor: "#f97316",
       bgGradient: "linear-gradient(135deg, #7c2d12 0%, #111827 60%, #020617 100%)",
       content: (
         <section className="slide-grid single">
           <div className="card shock">
             <Zap size={56} />
-            <p className="card-title">離れてください！</p>
+            <p className="card-title">ショックします。はなれて！</p>
             <ul className="plain-list">
-              <li>解析中・充電中は患者に触れない</li>
-              <li>ショック指示が出たら周囲へ離れるよう声かけ</li>
-              <li>ショック後は即座に胸骨圧迫を再開する</li>
+              <li>からだに さわらない</li>
+              <li>「みんな はなれて」と大きく言う</li>
+              <li>おわったら すぐむねをおす</li>
             </ul>
           </div>
         </section>
@@ -439,9 +442,9 @@ export default function App() {
     },
     {
       id: 7,
-      step: "FINISH",
-      title: "あきらめない心",
-      subTitle: "Don't Give Up",
+      step: "GOAL",
+      title: "7. つづけて待つ",
+      subTitle: "きゅうきゅうたいへ",
       accentColor: "#a855f7",
       bgGradient: "linear-gradient(135deg, #581c87 0%, #111827 60%, #020617 100%)",
       content: (
@@ -450,12 +453,12 @@ export default function App() {
             <Siren size={76} />
           </div>
           <p className="lead">
-            救急隊に引き継ぐまで、絶え間なく続ける。
+            救急隊が来るまで、
             <br />
-            あなたの行動が誰かの未来をつなぎます。
+            交代しながら続けよう。あなたの行動が命を守る。
           </p>
           <p className="finish-tag">
-            <CheckCircle2 size={18} /> BLS CYCLE COMPLETE
+            <CheckCircle2 size={18} /> よくできました
           </p>
         </section>
       ),
@@ -463,6 +466,7 @@ export default function App() {
   ];
 
   const current = slides[currentSlide];
+  const slideShellClassName = `slide-shell ${isTransitioning ? `is-transitioning to-${transitionDirection}` : ""}`;
 
   return (
     <div className="bls-app">
@@ -473,13 +477,14 @@ export default function App() {
         <div className="brand-wrap">
           <span className="step-bar" style={{ backgroundColor: current.accentColor }} />
           <div>
-            <p className="brand-title">AED & BLS GUIDE</p>
+            <p className="brand-title">こどもでもわかる AEDガイド</p>
             <p className="brand-step">{current.step}</p>
           </div>
         </div>
 
         <div className="header-meta">
           <p className="slide-index">{currentSlide + 1} / {slides.length}</p>
+          <p className="auto-note">10秒でつぎへ</p>
           <button
             type="button"
             className="timer-button"
@@ -502,13 +507,13 @@ export default function App() {
         onTouchEnd={handleTouchEnd}
         onTouchCancel={resetSwipe}
       >
-        <div className={`slide-shell ${isTransitioning ? "is-transitioning" : ""}`}>
+        <div className={slideShellClassName}>
           <p className="sub-title" style={{ color: current.accentColor }}>
             {current.subTitle}
           </p>
           <h1 className="slide-title">{current.title}</h1>
           {current.content}
-          <p className="gesture-hint">iPadでは左右フリックでスライド移動できます</p>
+          <p className="gesture-hint">左右スワイプでページ移動。10秒ごとに自動で進みます。</p>
         </div>
       </main>
 
@@ -524,7 +529,6 @@ export default function App() {
                 style={isActive ? { backgroundColor: slide.accentColor } : undefined}
                 onClick={() => {
                   setCurrentSlide(index);
-                  setIsPlaying(false);
                 }}
                 aria-label={`Go to ${slide.step}`}
               />
@@ -542,7 +546,7 @@ export default function App() {
             style={{ background: `linear-gradient(90deg, ${current.accentColor} 0%, #111827 100%)` }}
             aria-label="Next slide"
           >
-            NEXT <ChevronRight size={18} />
+            つぎへ <ChevronRight size={18} />
           </button>
         </div>
       </footer>
