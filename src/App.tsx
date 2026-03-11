@@ -14,6 +14,11 @@ import {
   Activity,
 } from "lucide-react";
 import "./App.css";
+import aedMain3091 from "./assets/photos/aed-main-3091.jpg";
+import aedOpen3092 from "./assets/photos/aed-open-3092.jpg";
+import breathingCheck3093 from "./assets/photos/breathing-check-3093.jpg";
+import cprCenter3094 from "./assets/photos/cpr-center-3094.jpg";
+import cprDepth3095 from "./assets/photos/cpr-depth-3095.jpg";
 
 interface SlideData {
   id: number;
@@ -368,6 +373,15 @@ export default function App() {
             <p className="card-title">おかしないきは危ない</p>
             <p className="card-note">しゃくりあげるような呼吸は「いきなし」</p>
           </div>
+          <figure className="photo-panel media-span">
+            <img
+              src={breathingCheck3093}
+              alt="顔と胸の動きを見て呼吸を確認するイラスト"
+              className="slide-photo"
+              loading="lazy"
+            />
+            <figcaption>口元と胸の動きを見て、10秒で判断する</figcaption>
+          </figure>
         </section>
       ),
     },
@@ -379,7 +393,7 @@ export default function App() {
       accentColor: "#ef4444",
       bgGradient: "linear-gradient(135deg, #7f1d1d 0%, #111827 60%, #020617 100%)",
       content: (
-        <section className="slide-grid single">
+        <section className="slide-grid cpr-layout">
           <div className="card wide">
             <Heart size={72} className={cprPulse === 0 ? "cpr-down" : "cpr-up"} />
             <p className="card-title">まんなかを 強く・はやく</p>
@@ -390,6 +404,30 @@ export default function App() {
               <span className="chip danger">おしたら もどす</span>
             </div>
           </div>
+          <figure className="photo-panel cpr-photo">
+            <div className="photo-frame">
+              <img
+                src={cprCenter3094}
+                alt="胸骨圧迫で胸の中央を押しているイラスト"
+                className="slide-photo"
+                loading="lazy"
+              />
+              <span className="photo-badge">左右の胸の真ん中を押す</span>
+            </div>
+            <figcaption>手は胸のまんなか（胸骨）に重ねる</figcaption>
+          </figure>
+          <figure className="photo-panel cpr-photo">
+            <div className="photo-frame">
+              <img
+                src={cprDepth3095}
+                alt="5センチの深さで胸骨圧迫しているイラスト"
+                className="slide-photo"
+                loading="lazy"
+              />
+              <span className="photo-badge">目安は 約5cm</span>
+            </div>
+            <figcaption>体重をかけて、しっかり沈むまで押す</figcaption>
+          </figure>
         </section>
       ),
     },
@@ -402,10 +440,27 @@ export default function App() {
       bgGradient: "linear-gradient(135deg, #064e3b 0%, #111827 60%, #020617 100%)",
       content: (
         <section className="slide-grid pad-layout">
-          <div className="card pad-card">
-            <TorsoWithPads />
+          <div className="card pad-card aed-photo-card">
+            <div className="apple-photo-stage">
+              <img
+                src={aedMain3091}
+                alt="AED一式の写真"
+                className="slide-photo apple-blend-photo"
+                loading="lazy"
+              />
+            </div>
+            <img
+              src={aedOpen3092}
+              alt="AEDを開いた状態の写真"
+              className="slide-photo aed-sub-photo"
+              loading="lazy"
+            />
+            <p className="card-note">3091は背景に自然になじむ見え方に調整</p>
           </div>
           <div className="card pad-info">
+            <TorsoWithPads />
+          </div>
+          <div className="card pad-info media-span">
             <p className="card-title">シールは2まい</p>
             <ol className="plain-list ordered">
               <li>みぎむねの上</li>

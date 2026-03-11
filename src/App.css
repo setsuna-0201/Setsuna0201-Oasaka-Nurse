@@ -221,6 +221,14 @@
   align-items: start;
 }
 
+.slide-grid.cpr-layout {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.media-span {
+  grid-column: 1 / -1;
+}
+
 .card {
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(255, 255, 255, 0.07);
@@ -258,6 +266,10 @@
 .card.pad-card {
   min-height: 410px;
   justify-content: center;
+}
+
+.card.aed-photo-card {
+  justify-content: flex-start;
 }
 
 .card.pad-info {
@@ -355,6 +367,89 @@
 
 .plain-list.ordered {
   list-style: decimal;
+}
+
+.photo-panel {
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.photo-panel figcaption {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.slide-photo {
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+}
+
+.photo-frame {
+  position: relative;
+}
+
+.photo-badge {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  background: rgba(17, 24, 39, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+}
+
+.cpr-photo {
+  align-content: start;
+}
+
+.cpr-layout .card.wide {
+  width: 100%;
+  grid-column: 1 / -1;
+}
+
+.apple-photo-stage {
+  position: relative;
+  padding: 14px;
+  border-radius: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.36) 55%, rgba(255, 255, 255, 0.06) 100%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.06) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 20px 40px rgba(2, 6, 23, 0.42);
+}
+
+.apple-photo-stage::after {
+  content: "";
+  position: absolute;
+  inset: auto 12% -40px 12%;
+  height: 62px;
+  background: radial-gradient(circle, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0) 70%);
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+.apple-blend-photo {
+  border-radius: 14px;
+  mix-blend-mode: multiply;
+  filter: saturate(1.08) contrast(1.04);
+}
+
+.aed-sub-photo {
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .pulse-soft {
@@ -513,9 +608,18 @@
     grid-template-columns: 1fr;
   }
 
+  .slide-grid.cpr-layout {
+    grid-template-columns: 1fr;
+  }
+
   .card.pad-card,
   .card.pad-info {
     min-height: auto;
+  }
+
+  .photo-badge {
+    font-size: 11px;
+    padding: 5px 8px;
   }
 }
 
@@ -569,6 +673,10 @@
     grid-template-columns: 1fr;
   }
 
+  .slide-grid.cpr-layout {
+    grid-template-columns: 1fr;
+  }
+
   .card {
     min-height: 136px;
     padding: 16px;
@@ -580,6 +688,14 @@
 
   .plain-list {
     font-size: 14px;
+  }
+
+  .photo-panel {
+    padding: 10px;
+  }
+
+  .photo-panel figcaption {
+    font-size: 12px;
   }
 
   .torso-wrap {
