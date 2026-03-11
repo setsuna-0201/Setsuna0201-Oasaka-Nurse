@@ -19,6 +19,7 @@ import aedOpen3092 from "./assets/photos/aed-open-3092.jpg";
 import breathingCheck3093 from "./assets/photos/breathing-check-3093.jpg";
 import cprCenter3094 from "./assets/photos/cpr-center-3094.jpg";
 import cprDepth3095 from "./assets/photos/cpr-depth-3095.jpg";
+import shockClear3096 from "./assets/photos/shock-clear-3096.png";
 
 interface SlideData {
   id: number;
@@ -39,7 +40,7 @@ interface SwipeStart {
 const SWIPE_MIN_DISTANCE_PX = 56;
 const SWIPE_MAX_OFF_AXIS_PX = 72;
 const SWIPE_MAX_DURATION_MS = 650;
-const TOTAL_SLIDES = 8;
+const TOTAL_SLIDES = 9;
 
 function CircularTimer({
   duration,
@@ -497,8 +498,40 @@ export default function App() {
     },
     {
       id: 7,
+      step: "STEP 7",
+      title: "7. ショック時は みんな離れる",
+      subTitle: "からだに ふれない",
+      accentColor: "#fb923c",
+      bgGradient: "linear-gradient(135deg, #9a3412 0%, #111827 60%, #020617 100%)",
+      content: (
+        <section className="slide-grid shock-layout">
+          <div className="card shock">
+            <Zap size={56} />
+            <p className="card-title">「離れて！」を大きく言う</p>
+            <ul className="plain-list">
+              <li>ショックの前に、全員が患者さんから離れる</li>
+              <li>誰も触れていないのを目で確認する</li>
+              <li>確認できたらショックボタンを押す</li>
+            </ul>
+          </div>
+          <figure className="photo-panel media-span">
+            <div className="apple-photo-stage soft-blend-stage">
+              <img
+                src={shockClear3096}
+                alt="電気ショックの前に周囲へ離れるよう声かけするイラスト"
+                className="slide-photo soft-blend-photo"
+                loading="lazy"
+              />
+            </div>
+            <figcaption>ショックの瞬間は、患者さんにも機器にも触れない</figcaption>
+          </figure>
+        </section>
+      ),
+    },
+    {
+      id: 8,
       step: "GOAL",
-      title: "7. つづけて待つ",
+      title: "8. つづけて待つ",
       subTitle: "きゅうきゅうたいへ",
       accentColor: "#a855f7",
       bgGradient: "linear-gradient(135deg, #581c87 0%, #111827 60%, #020617 100%)",
