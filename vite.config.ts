@@ -5,5 +5,5 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/bls-ipad-S/',
+  base: '/Setsuna0201-Oasaka-Nurse/',
 })
